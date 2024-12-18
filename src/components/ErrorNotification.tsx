@@ -11,11 +11,13 @@ export const ErrorNotification: React.FC<Props> = props => {
   const { errorMessage, setErrorMessage } = props;
 
   useEffect(() => {
-    if (errorMessage === ErrorType.Default) return;
+    if (errorMessage === ErrorType.Default) {
+      return;
+    }
 
     const timerId = setTimeout(() => {
       setErrorMessage(ErrorType.Default);
-    }, 3000)
+    }, 3000);
 
     return () => clearTimeout(timerId);
   }, [errorMessage]);

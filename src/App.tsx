@@ -15,7 +15,9 @@ import { TodoItem } from './components/TodoItem';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [errorMessage, setErrorMessage] = useState<ErrorType>(ErrorType.Default);
+  const [errorMessage, setErrorMessage] = useState<ErrorType>(
+    ErrorType.Default,
+  );
   const [filter, setFilter] = useState<Filter>(Filter.All);
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
   const [loadingTodoIds, setLoadingTodoIds] = useState<number[]>([]);
@@ -43,15 +45,15 @@ export const App: React.FC = () => {
   };
 
   const handleDeleteTodo = async (todoId: number) => {
-    setLoadingTodoIds((prev) => [...prev, todoId]);
+    setLoadingTodoIds(prev => [...prev, todoId]);
     try {
       await deleteTodo(todoId);
-      setTodos(prev => prev.filter((todo) => todo.id !== todoId));
-    } catch(error) {
+      setTodos(prev => prev.filter(todo => todo.id !== todoId));
+    } catch (error) {
       setErrorMessage(ErrorType.DeleteTodo);
       throw error;
     } finally {
-      setLoadingTodoIds((prev) => prev.filter((id) => id !== todoId));
+      setLoadingTodoIds(prev => prev.filter(id => id !== todoId));
     }
   };
 
@@ -64,8 +66,9 @@ export const App: React.FC = () => {
     });
     try {
       const newTodo = await createTodo({ title: todoTitle, completed: false });
+
       setTodos(prev => [...prev, newTodo]);
-    } catch(error) {
+    } catch (error) {
       setErrorMessage(ErrorType.AddTodo);
       throw error;
     } finally {
@@ -74,12 +77,12 @@ export const App: React.FC = () => {
   };
 
   const handleClearCompleted = async () => {
-    const completedTodos = todos.filter((todo) => todo.completed);
+    const completedTodos = todos.filter(todo => todo.completed);
 
-    completedTodos.forEach((todo) => {
+    completedTodos.forEach(todo => {
       handleDeleteTodo(todo.id);
-    })
-  }
+    });
+  };
 
   if (!USER_ID) {
     return <UserWarning />;

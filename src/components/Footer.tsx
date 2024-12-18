@@ -1,17 +1,24 @@
-import cn from "classnames";
-import { Filter } from "../types/Filter";
-import { Todo } from "../types/Todo";
+import cn from 'classnames';
+import { Filter } from '../types/Filter';
+import { Todo } from '../types/Todo';
 
 type Props = {
   filter: Filter;
   notCompletedTodos: number;
   handleFilterChange: (newFilter: Filter) => void;
   filteredTodos: Todo[];
-  handleClearCompleted: () => Promise<void>
-}
+  handleClearCompleted: () => Promise<void>;
+};
 
-export const Footer: React.FC<Props> = (props) => {
-  const { notCompletedTodos, filter, handleFilterChange, filteredTodos, handleClearCompleted } = props
+export const Footer: React.FC<Props> = props => {
+  const {
+    notCompletedTodos,
+    filter,
+    handleFilterChange,
+    filteredTodos,
+    handleClearCompleted,
+  } = props;
+
   return (
     <footer className="todoapp__footer" data-cy="Footer">
       <span className="todo-count" data-cy="TodosCounter">
@@ -19,17 +26,18 @@ export const Footer: React.FC<Props> = (props) => {
       </span>
 
       <nav className="filter" data-cy="Filter">
-        {Object.values(Filter).map((filterOption) => (
+        {Object.values(Filter).map(filterOption => (
           <a
-          href={`#/${filterOption.toLowerCase()}`}
-          className={cn('filter__link', {
-            selected: filter === filterOption,
-          })}
-          data-cy={`FilterLink${filterOption}`}
-          onClick={() => handleFilterChange(filterOption)}
-        >
-          {filterOption}
-        </a>
+            key={filterOption}
+            href={`#/${filterOption === Filter.All ? '' : filterOption.toLowerCase()}`}
+            className={cn('filter__link', {
+              selected: filter === filterOption,
+            })}
+            data-cy={`FilterLink${filterOption}`}
+            onClick={() => handleFilterChange(filterOption)}
+          >
+            {filterOption}
+          </a>
         ))}
       </nav>
 

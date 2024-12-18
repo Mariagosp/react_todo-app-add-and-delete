@@ -1,20 +1,19 @@
-import { Todo } from "../types/Todo";
-import cn from "classnames";
+import { Todo } from '../types/Todo';
+import cn from 'classnames';
 
 type Props = {
   todo: Todo;
   handleDeleteTodo: (todoId: number) => Promise<void>;
   isLoading?: boolean;
-}
+};
 
-export const TodoItem: React.FC<Props> = (props) => {
+export const TodoItem: React.FC<Props> = props => {
   const { todo, isLoading, handleDeleteTodo } = props;
+
   return (
-    <div
-      data-cy="Todo"
-      className={cn('todo', { completed: todo.completed })}
-    >
+    <div data-cy="Todo" className={cn('todo', { completed: todo.completed })}>
       <label className="todo__status-label">
+        {''}
         <input
           data-cy="TodoStatus"
           type="checkbox"
