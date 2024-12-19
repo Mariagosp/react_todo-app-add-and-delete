@@ -1,24 +1,35 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ErrorType } from '../types/ErrorType';
-import { Todo } from '../types/Todo';
 
 type Props = {
   handleAddTodo: (todoTitle: string) => Promise<void>;
   setErrorMessage: React.Dispatch<React.SetStateAction<ErrorType>>;
-  tempTodo: Todo | null;
+  inputNameRef: React.RefObject<HTMLInputElement> | null;
+  todosLength: number;
+  isInputDisabled: boolean;
 };
 
 export const Header: React.FC<Props> = props => {
   const [inputValue, setInputValue] = useState('');
-  const { handleAddTodo, setErrorMessage, tempTodo } = props;
-
-  const inputNameRef = useRef<HTMLInputElement>(null);
+  const {
+    handleAddTodo,
+    setErrorMessage,
+    inputNameRef,
+    todosLength,
+    isInputDisabled,
+  } = props;
 
   useEffect(() => {
-    if (inputNameRef.current) {
-      inputNameRef.current.focus();
+    if (inputNameRef?.current) {
+      inputNameRef?.current.focus();
     }
-  }, []);
+  }, [todosLength]);
+
+  useEffect(() => {
+    if (!isInputDisabled) {
+      inputNameRef?.current?.focus();
+    }
+  }, [isInputDisabled]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -36,7 +47,10 @@ export const Header: React.FC<Props> = props => {
     try {
       await handleAddTodo(inputValue.trim());
       setInputValue('');
-    } catch (err) {}
+    } catch (err) { }
+    finally {
+      inputNameRef?.current?.focus();
+      }
   };
 
   return (
@@ -57,10 +71,8 @@ export const Header: React.FC<Props> = props => {
           placeholder="What needs to be done?"
           value={inputValue}
           onChange={handleInputChange}
-          disabled={!!tempTodo}
-          // disabled={todoIdinEditMode === 0}
+          disabled={isInputDisabled}
           ref={inputNameRef}
-          // disabled={!!loadingTodoId}
         />
       </form>
     </header>

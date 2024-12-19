@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { UserWarning } from './UserWarning';
 import { createTodo, deleteTodo, getTodos, USER_ID } from './api/todos';
 import { Todo } from './types/Todo';
@@ -32,6 +32,8 @@ export const App: React.FC = () => {
 
   const notCompletedTodos = todos.filter(todo => !todo.completed).length;
 
+  const inputNameRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     getTodos()
       .then(setTodos)
@@ -51,6 +53,7 @@ export const App: React.FC = () => {
       setTodos(prev => prev.filter(todo => todo.id !== todoId));
     } catch (error) {
       setErrorMessage(ErrorType.DeleteTodo);
+      inputNameRef.current?.focus();
       throw error;
     } finally {
       setLoadingTodoIds(prev => prev.filter(id => id !== todoId));
@@ -70,6 +73,7 @@ export const App: React.FC = () => {
       setTodos(prev => [...prev, newTodo]);
     } catch (error) {
       setErrorMessage(ErrorType.AddTodo);
+      inputNameRef.current?.focus();
       throw error;
     } finally {
       setTempTodo(null);
@@ -96,7 +100,9 @@ export const App: React.FC = () => {
         <Header
           handleAddTodo={handleAddTodo}
           setErrorMessage={setErrorMessage}
-          tempTodo={tempTodo}
+          isInputDisabled={!!tempTodo}
+          inputNameRef={inputNameRef}
+          todosLength={todos.length}
         />
 
         <section className="todoapp__main" data-cy="TodoList">
